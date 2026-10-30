@@ -52,6 +52,8 @@ const Metadata: FC = () => {
         name="viewport"
       />
       <meta content={description} name="description" />
+      <link rel="canonical" href="https://psy-manzar-portfolio.vercel.app/" />
+      <meta content="https://psy-manzar-portfolio.vercel.app/" property="og:url" />
       <meta content={alias} property="og:title" />
       <meta content="website" property="og:type" />
       <meta content={description} property="og:description" />
