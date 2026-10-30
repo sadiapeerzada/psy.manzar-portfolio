@@ -88,12 +88,12 @@ const Sidebar: FC<SidebarProps> = ({ height }) => {
           action: () =>
             open(
               "FileExplorer",
-              { url: `${HOME}/Photography` },
+              { url: `${HOME}/Life` },
               "/System/Icons/pictures.webp"
             ),
           icon: <Pictures />,
-          name: "Photography",
-          ...(collapsed && { tooltip: "Photography" }),
+          name: "Life",
+          ...(collapsed && { tooltip: "Life" }),
         }
       : undefined,
     buttonAreaCount > 5
