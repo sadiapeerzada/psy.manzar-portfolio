@@ -17,7 +17,7 @@ const ManazirProfile: FC = () => (
       boxShadow: "0 12px 30px rgba(0,0,0,0.24)",
       color: "#fff",
       textAlign: "center",
-      pointerEvents: "none",
+      pointerEvents: "auto",
     }}
   >
     <img
@@ -33,6 +33,10 @@ const ManazirProfile: FC = () => (
       <br />
       Aligarh Muslim University
     </div>
+    <nav aria-label="Manazir social profiles" style={{ display: "flex", justifyContent: "center", gap: 12, marginTop: 14 }}>
+      <a href="https://www.linkedin.com/in/mohd-manazir-b42471434/" target="_blank" rel="noopener noreferrer" style={{ color: "#b6dcff", fontSize: 13, textDecoration: "underline" }}>LinkedIn</a>
+      <a href="https://www.instagram.com/psy.manzar/?hl=en" target="_blank" rel="noopener noreferrer" style={{ color: "#ffc0da", fontSize: 13, textDecoration: "underline" }}>Instagram</a>
+    </nav>
   </aside>
 );
 
