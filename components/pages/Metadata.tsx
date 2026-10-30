@@ -10,7 +10,7 @@ import {
   isDynamicIcon,
 } from "utils/functions";
 
-const { alias, author, description } = PACKAGE_DATA;
+const { alias, description } = PACKAGE_DATA;
 
 const PreloadIcons: FC = () => (
   <>
@@ -54,15 +54,7 @@ const Metadata: FC = () => {
       <meta content={description} name="description" />
       <meta content={alias} property="og:title" />
       <meta content="website" property="og:type" />
-      <meta content={author.url} property="og:url" />
-      <meta content={`${author.url}/screenshot.png`} property="og:image" />
       <meta content={description} property="og:description" />
-      <link
-        href={`${author.url}/rss.xml`}
-        rel="alternate"
-        title={`RSS Feed for ${alias}`}
-        type="application/rss+xml"
-      />
       <PreloadIcons />
       {useCursor()}
     </Head>
