@@ -376,14 +376,14 @@ export const DEFAULT_SCROLLBAR_WIDTH = 17;
 export const TASKBAR_HEIGHT = 30;
 
 export const PACKAGE_DATA = {
-  alias: "daedalOS",
+  alias: "Mohammad Manazir",
   author: {
     email: "dustinbrett@gmail.com",
     name: "Dustin Brett",
     npub: "npub10l3amzckl56834tgsvdafrg5dtux9aam9maqvudjfsjtnjjdduaqj0sehy",
     url: "https://dustinbrett.com",
   },
-  description: "Desktop environment in the browser",
+  description: "Mohammad Manazir — interactive desktop portfolio",
   license: "MIT",
   version: "2.0.0",
 };
