@@ -3,7 +3,7 @@ import { MANAZIR_AVATAR } from "components/pages/manazirAvatar";
 /** A small, non-interactive profile card; desktop icons and apps remain usable. */
 const ManazirProfile: FC = () => (
   <aside
-    aria-label="About Manazir"
+    aria-label="About Mohammad Manazir"
     style={{
       position: "absolute",
       right: 24,
@@ -27,7 +27,7 @@ const ManazirProfile: FC = () => (
       height={96}
       style={{ borderRadius: "50%", objectFit: "cover", margin: "0 auto 10px" }}
     />
-    <div style={{ fontWeight: 700, fontSize: 18 }}>Manazir</div>
+    <div style={{ fontWeight: 700, fontSize: 18 }}>Mohammad Manazir</div>
     <div style={{ fontSize: 12, lineHeight: 1.5, marginTop: 6, opacity: 0.85 }}>
       First-year Zoology student
       <br />
