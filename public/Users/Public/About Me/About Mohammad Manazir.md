@@ -1,0 +1,22 @@
+# Mohammad Manazir
+
+![Illustration of Mohammad Manazir with black hair and sunglasses](data:image/webp;base64,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)
+
+**First-year Zoology student**  
+**Aligarh Muslim University**
+
+Hello! I'm Mohammad Manazir, a first-year Zoology student at Aligarh Muslim University. This portfolio is a little window into my world, my interests, and the moments I choose to share.
+
+## Around my desktop
+
+- **Life** — memories and photographs
+- **Blogs** — thoughts and stories
+- **Tennis** — notes and favorite moments from the sport
+- **Resume** — academic profile
+
+## Find me online
+
+- [Instagram — @psy.manzar](https://www.instagram.com/psy.manzar/?hl=en)
+- [LinkedIn](https://www.linkedin.com/in/mohd-manazir-b42471434/)
+
+*More about me coming soon.*
