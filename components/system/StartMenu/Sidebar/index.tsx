@@ -75,12 +75,12 @@ const Sidebar: FC<SidebarProps> = ({ height }) => {
           action: () =>
             open(
               "FileExplorer",
-              { url: `${HOME}/Documents` },
+              { url: `${HOME}/About Me` },
               "/System/Icons/documents.webp"
             ),
           icon: <Documents />,
-          name: "Documents",
-          ...(collapsed && { tooltip: "Documents" }),
+          name: "About Me",
+          ...(collapsed && { tooltip: "About Me" }),
         }
       : undefined,
     buttonAreaCount > 4
@@ -88,12 +88,12 @@ const Sidebar: FC<SidebarProps> = ({ height }) => {
           action: () =>
             open(
               "FileExplorer",
-              { url: `${HOME}/Pictures` },
+              { url: `${HOME}/Photography` },
               "/System/Icons/pictures.webp"
             ),
           icon: <Pictures />,
-          name: "Pictures",
-          ...(collapsed && { tooltip: "Pictures" }),
+          name: "Photography",
+          ...(collapsed && { tooltip: "Photography" }),
         }
       : undefined,
     buttonAreaCount > 5
