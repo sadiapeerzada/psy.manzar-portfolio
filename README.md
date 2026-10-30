@@ -1,4 +1,6 @@
-# Manazir — Interactive Portfolio
+# Mohammad Manazir — Interactive Portfolio
+
+**Live portfolio:** https://psy-manzar-portfolio.vercel.app/
 
 An interactive desktop-style personal portfolio for **Manazir**, a **first-year Zoology student at Aligarh Muslim University (AMU)**.
 
@@ -14,7 +16,7 @@ yarn build:prebuild
 yarn dev
 ```
 
-Open http://localhost:3000. After editing files in `public/`, rerun `yarn build:prebuild` to regenerate filesystem indexes.
+Open http://localhost:3000. After editing files in `public/`, rerun `yarn build:prebuild` to regenerate filesystem indexes. The production build (`yarn build`) already runs this prebuild step.
 
 ## Credits and license
 
