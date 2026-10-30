@@ -376,12 +376,12 @@ export const DEFAULT_SCROLLBAR_WIDTH = 17;
 export const TASKBAR_HEIGHT = 30;
 
 export const PACKAGE_DATA = {
-  alias: "Manazir",
+  alias: "Mohammad Manazir",
   author: {
-    email: "dustinbrett@gmail.com",
-    name: "Dustin Brett",
-    npub: "npub10l3amzckl56834tgsvdafrg5dtux9aam9maqvudjfsjtnjjdduaqj0sehy",
-    url: "https://dustinbrett.com",
+    name: "Mohammad Manazir",
+    email: "",
+    npub: "",
+    url: "",
   },
   description: "Manazir is a first-year Zoology student at Aligarh Muslim University. Explore his interactive desktop portfolio.",
   license: "MIT",
