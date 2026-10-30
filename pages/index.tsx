@@ -1,4 +1,5 @@
 import AppsLoader from "components/system/Apps/AppsLoader";
+import ManazirProfile from "components/pages/ManazirProfile";
 import Desktop from "components/system/Desktop";
 import Taskbar from "components/system/Taskbar";
 import useGlobalErrorHandler from "hooks/useGlobalErrorHandler";
@@ -18,6 +19,7 @@ const Index: FC = () => {
 
   return (
     <Desktop>
+      <ManazirProfile />
       <Taskbar />
       <AppsLoader />
     </Desktop>
