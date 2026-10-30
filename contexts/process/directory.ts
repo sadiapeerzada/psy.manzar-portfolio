@@ -149,14 +149,14 @@ const directory: Processes = {
   },
   Messenger: {
     backgroundColor: "#242526",
-    Component: dynamic(() => import("components/apps/Messenger")),
+    Component: dynamic(() => import("components/apps/Instagram")),
     defaultSize: {
       height: 500,
       width: 425,
     },
     icon: "/System/Icons/messenger.webp",
     singleton: true,
-    title: "Messenger",
+    title: "Instagram",
   },
   MonacoEditor: {
     backgroundColor: "#1E1E1E",
