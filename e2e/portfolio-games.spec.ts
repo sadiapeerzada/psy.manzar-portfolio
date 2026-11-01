@@ -49,3 +49,26 @@ for (const game of canvasGames) {
     await page.keyboard.press("ArrowRight");
   });
 }
+
+test("Chrome Dino loads its game canvas", async ({ page }) => {
+  await loadApp({ app: "Browser", url: "chrome://dino" })({ page });
+
+  const dinoCanvas = page
+    .frameLocator('iframe[title*="Browser"]')
+    .locator("canvas");
+
+  await expect(dinoCanvas).toBeVisible({ timeout: 30_000 });
+  await dinoCanvas.click();
+  await page.keyboard.press("Space");
+});
+
+test("Desktop DOOM opens the playable host in a new tab", async ({ page }) => {
+  await loadApp()({ page });
+
+  const popupPromise = page.waitForEvent("popup");
+  await page.getByRole("button", { name: "DOOM", exact: true }).dblclick();
+  const popup = await popupPromise;
+
+  await expect.poll(() => popup.url()).toContain("silentspacemarine.com");
+  await popup.close();
+});
