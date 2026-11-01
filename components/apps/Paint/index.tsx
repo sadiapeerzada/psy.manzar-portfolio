@@ -1,6 +1,7 @@
 import { basename, dirname, join } from "path";
 import { useEffect, useRef, useState } from "react";
 import StyledPaint from "components/apps/Paint/StyledPaint";
+import FallbackPaint from "components/apps/Paint/FallbackPaint";
 import { type ComponentProcessProps } from "components/system/Apps/RenderComponent";
 import StyledLoading from "components/system/Apps/StyledLoading";
 import useFileDrop from "components/system/Files/FileManager/useFileDrop";
@@ -93,28 +94,31 @@ const Paint: FC<ComponentProcessProps> = ({ id }) => {
   }, [foregroundId, id, setForegroundId]);
 
   useEffect(() => {
-    const { contentWindow } = iframeRef.current || {};
-    let cleanup: (() => void) | undefined;
+    const contentWindow = iframeRef.current?.contentWindow;
 
-    if (loaded && contentWindow && !jsPaintInstance && !loadError) {
-      const jsPaint = contentWindow as unknown as JsPaint;
+    if (!loaded || !contentWindow || jsPaintInstance || loadError) return;
 
-      // An iframe also fires "load" for a 404 or error page. Do not crash
-      // the entire Paint window by accessing missing JS Paint globals.
+    // The iframe load event also fires for partial pages and before some
+    // deferred editor initialization has finished. Wait for an actual canvas
+    // and the JS Paint hooks rather than immediately showing a fatal error.
+    let attempts = 0;
+    let stopped = false;
+    const checkReady = (): void => {
+      if (stopped) return;
+
       try {
+        const jsPaint = contentWindow as unknown as JsPaint;
+        const editor = contentWindow.document.querySelector(
+          "canvas.main-canvas"
+        );
         if (
-          !jsPaint.systemHooks ||
-          typeof jsPaint.systemHooks.showOpenFileDialog !== "function" ||
-          typeof jsPaint.file_new !== "function"
+          jsPaint.systemHooks &&
+          typeof jsPaint.systemHooks.showOpenFileDialog === "function" &&
+          typeof jsPaint.file_new === "function" &&
+          editor
         ) {
-          setLoadError(true);
-          return;
-        }
-      } catch {
-        setLoadError(true);
-        return;
-      }
-
+          stopped = true;
+          window.clearInterval(poll);
       const previousOpenFileDialog = jsPaint.systemHooks.showOpenFileDialog;
       const previousFileNew = jsPaint.file_new;
 
@@ -173,16 +177,27 @@ const Paint: FC<ComponentProcessProps> = ({ id }) => {
         }
       };
 
-      contentWindow.addEventListener("dragover", onDragOver);
-      contentWindow.addEventListener("drop", onDrop);
+          return;
+        }
+      } catch {
+        // A temporarily unavailable iframe is not proof the editor failed.
+      }
 
-      cleanup = () => {
-        contentWindow.removeEventListener("dragover", onDragOver);
-        contentWindow.removeEventListener("drop", onDrop);
-      };
-    }
+      attempts += 1;
+      if (attempts >= 50) {
+        stopped = true;
+        window.clearInterval(poll);
+        setLoadError(true);
+      }
+    };
 
-    return cleanup;
+    const poll = window.setInterval(checkReady, 200);
+    checkReady();
+
+    return () => {
+      stopped = true;
+      window.clearInterval(poll);
+    };
   }, [
     closeWithTransition,
     createPath,
@@ -191,13 +206,25 @@ const Paint: FC<ComponentProcessProps> = ({ id }) => {
     jsPaintInstance,
     loadError,
     loaded,
-    onDragOver,
-    onDrop,
     prependFileToTitle,
     setWallpaperFromCanvas,
     updateFolder,
     writeFile,
   ]);
+
+  // Attach pointer file drops after initialization, preserving handlers
+  // through the separate readiness-state update.
+  useEffect(() => {
+    const contentWindow = iframeRef.current?.contentWindow;
+    if (!jsPaintInstance || !contentWindow) return;
+
+    contentWindow.addEventListener("dragover", onDragOver);
+    contentWindow.addEventListener("drop", onDrop);
+    return () => {
+      contentWindow.removeEventListener("dragover", onDragOver);
+      contentWindow.removeEventListener("drop", onDrop);
+    };
+  }, [jsPaintInstance, onDragOver, onDrop]);
 
   useEffect(() => {
     if (jsPaintInstance && url) {
@@ -229,20 +256,9 @@ const Paint: FC<ComponentProcessProps> = ({ id }) => {
       {!jsPaintInstance && !loadError && (
         <StyledLoading className="loading" />
       )}
-      {loadError && (
-        <div className="paint-fallback" role="alert">
-          <strong>Paint could not start.</strong>
-          <span>Try reopening Paint or use the standalone editor.</span>
-          <a
-            href="https://jspaint.app/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Open JS Paint in a new tab
-          </a>
-        </div>
-      )}
-      {paintSrc && (
+      {loadError && <FallbackPaint />}
+
+      {paintSrc && !loadError && (
         <iframe
           ref={iframeRef}
           // Busy on the content only, never on an ancestor of the
