@@ -1068,12 +1068,13 @@ function draw_grid(ctx, scale) {
 		try {
 			gl = canvas.getContext('webgl', { antialias: false });
 		} catch (error) {
-			show_error_message("Failed to get WebGL context. You may need to refresh the web page, or restart your computer.", error);
+			window.console && console.warn("WebGL is unavailable; Paint will use its Canvas 2D fallback.", error);
+			gl = null;
 			return;
 		}
 
 		if (!gl) {
-			show_error_message("Failed to get WebGL context. You may need to refresh the web page, or restart your computer.");
+			window.console && console.warn("WebGL is unavailable; Paint will use its Canvas 2D fallback.");
 			return;
 		}
 
@@ -1153,6 +1154,7 @@ function draw_grid(ctx, scale) {
 	op_canvas_webgl.addEventListener("webglcontextlost", (e) => {
 		e.preventDefault();
 		window.console && console.warn("WebGL context lost");
+		gl = null;
 		clamp_brush_sizes();
 
 		warning_tid = setTimeout(() => {
@@ -1198,9 +1200,27 @@ function draw_grid(ctx, scale) {
 	};
 
 	function draw_polygon_or_line_strip(ctx, points, stroke, fill, close_path) {
+		if (!points.length) return;
+
 		if (!gl) {
-			show_error_message("Failed to get WebGL context. You may need to refresh the web page, or restart your computer.");
-			return; // @TODO: don't pollute brush cache with empty brushes (also maybe fallback to 2D canvas rendering)
+			// WebGL can be unavailable on some GPUs, browsers, or CI workers.
+			// Keep freehand lines and polygon drawing usable with Canvas 2D.
+			ctx.save();
+			ctx.beginPath();
+			ctx.moveTo(points[0].x, points[0].y);
+			for (let i = 1; i < points.length; i++) {
+				ctx.lineTo(points[i].x, points[i].y);
+			}
+			if (close_path) ctx.closePath();
+			if (fill) ctx.fill();
+			if (stroke) {
+				ctx.lineWidth = Math.max(1, stroke_size);
+				ctx.lineJoin = "round";
+				ctx.lineCap = "round";
+				ctx.stroke();
+			}
+			ctx.restore();
+			return;
 		}
 
 		// this must be before stuff is done with op_canvas

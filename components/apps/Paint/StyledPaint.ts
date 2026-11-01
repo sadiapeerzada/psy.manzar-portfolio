@@ -10,6 +10,23 @@ const StyledPaint = styled.div<StyledPaintProps>`
     transition: opacity 0.25s ease-in;
   }
 
+  .paint-fallback {
+    align-items: center;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    height: 100%;
+    justify-content: center;
+    padding: 24px;
+    text-align: center;
+
+    a {
+      color: #cbe3ff;
+      text-decoration: underline;
+    }
+  }
+
   .loading {
     &::before {
       color: #fff;

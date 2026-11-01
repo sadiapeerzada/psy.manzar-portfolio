@@ -34,7 +34,13 @@ type JsPaint = {
     showSaveFileDialog: (props: {
       defaultFileName: string;
       getBlob: (mimeType: string) => Promise<Blob>;
-    }) => void;
+      savedCallbackUnreliable?: (result: {
+        newBlob: Blob;
+        newFileFormatID: string;
+        newFileHandle: string;
+        newFileName: string;
+      }) => void;
+    }) => Promise<void>;
     writeBlobToHandle: (fileHandle: string, blob: Blob) => Promise<void>;
   };
 };
@@ -52,6 +58,7 @@ const Paint: FC<ComponentProcessProps> = ({ id }) => {
   const foregroundId = useForegroundId();
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [loaded, setLoaded] = useState(false);
+  const [loadError, setLoadError] = useState(false);
   const [jsPaintInstance, setJsPaintInstance] = useState<JsPaint>();
   const { prependFileToTitle } = useTitle(id);
   const setWallpaperFromCanvas =
@@ -89,8 +96,25 @@ const Paint: FC<ComponentProcessProps> = ({ id }) => {
     const { contentWindow } = iframeRef.current || {};
     let cleanup: (() => void) | undefined;
 
-    if (loaded && contentWindow && !jsPaintInstance) {
+    if (loaded && contentWindow && !jsPaintInstance && !loadError) {
       const jsPaint = contentWindow as unknown as JsPaint;
+
+      // An iframe also fires "load" for a 404 or error page. Do not crash
+      // the entire Paint window by accessing missing JS Paint globals.
+      try {
+        if (
+          !jsPaint.systemHooks ||
+          typeof jsPaint.systemHooks.showOpenFileDialog !== "function" ||
+          typeof jsPaint.file_new !== "function"
+        ) {
+          setLoadError(true);
+          return;
+        }
+      } catch {
+        setLoadError(true);
+        return;
+      }
+
       const previousOpenFileDialog = jsPaint.systemHooks.showOpenFileDialog;
       const previousFileNew = jsPaint.file_new;
 
@@ -106,7 +130,7 @@ const Paint: FC<ComponentProcessProps> = ({ id }) => {
       jsPaint.systemHooks.showOpenFileDialog = async (props) => {
         const { file } = await previousOpenFileDialog(props);
 
-        prependFileToTitle(file.name);
+        if (file) prependFileToTitle(file.name);
 
         return { file };
       };
@@ -117,15 +141,31 @@ const Paint: FC<ComponentProcessProps> = ({ id }) => {
       jsPaint.systemHooks.showSaveFileDialog = async ({
         defaultFileName,
         getBlob,
-      }) =>
-        updateFolder(
+        savedCallbackUnreliable,
+      }) => {
+        // JS Paint supplies a name that may already include an extension.
+        // Always produce a single .png suffix and tell JS Paint where it
+        // was saved, so subsequent Save operations can overwrite the file.
+        const baseName =
+          basename(defaultFileName || "Untitled").replace(/\.[^/.]+$/, "") ||
+          "Untitled";
+        const pngBlob = await getBlob("image/png");
+        const fileName = await createPath(
+          `${baseName}.png`,
           DESKTOP_PATH,
-          await createPath(
-            `${defaultFileName}.png`,
-            DESKTOP_PATH,
-            await blobToBuffer(await getBlob("image/png"))
-          )
+          await blobToBuffer(pngBlob)
         );
+
+        if (!fileName) return;
+
+        await updateFolder(DESKTOP_PATH, fileName);
+        savedCallbackUnreliable?.({
+          newBlob: pngBlob,
+          newFileFormatID: "image/png",
+          newFileHandle: join(DESKTOP_PATH, fileName),
+          newFileName: fileName,
+        });
+      };
       jsPaint.systemHooks.writeBlobToHandle = async (fileHandle, blob) => {
         if (await exists(fileHandle)) {
           await writeFile(fileHandle, await blobToBuffer(blob), true);
@@ -149,6 +189,7 @@ const Paint: FC<ComponentProcessProps> = ({ id }) => {
     exists,
     id,
     jsPaintInstance,
+    loadError,
     loaded,
     onDragOver,
     onDrop,
@@ -184,8 +225,23 @@ const Paint: FC<ComponentProcessProps> = ({ id }) => {
   }, [jsPaintInstance, prependFileToTitle, readFile, url]);
 
   return (
-    <StyledPaint $loaded={loaded}>
-      {!loaded && <StyledLoading className="loading" />}
+    <StyledPaint $loaded={Boolean(jsPaintInstance)}>
+      {!jsPaintInstance && !loadError && (
+        <StyledLoading className="loading" />
+      )}
+      {loadError && (
+        <div className="paint-fallback" role="alert">
+          <strong>Paint could not start.</strong>
+          <span>Try reopening Paint or use the standalone editor.</span>
+          <a
+            href="https://jspaint.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Open JS Paint in a new tab
+          </a>
+        </div>
+      )}
       {paintSrc && (
         <iframe
           ref={iframeRef}
@@ -195,7 +251,8 @@ const Paint: FC<ComponentProcessProps> = ({ id }) => {
           height="100%"
           id={`jspaint-${id}`}
           onLoad={() => setLoaded(true)}
-          src={paintSrc}
+          onError={() => setLoadError(true)}
+          src={encodeURI(paintSrc)}
           title={windowTitle}
           width="100%"
           {...IFRAME_CONFIG}
