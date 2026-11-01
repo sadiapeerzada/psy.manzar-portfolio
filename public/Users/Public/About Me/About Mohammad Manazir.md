@@ -5,7 +5,11 @@
 **First-year Zoology student**  
 **Aligarh Muslim University**
 
-Hello! I'm Mohammad Manazir, a first-year Zoology student at Aligarh Muslim University. This portfolio is a little window into my world, my interests, and the moments I choose to share.
+Hello, I'm Mohammad Manazir, a B.Sc. freshman at Aligarh Muslim University, studying Zoology and Biochemistry. Welcome to my little corner of the internet!
+
+## More about me
+
+I love to write, lose myself in a good book, and watch anime. When I'm not reading or catching up on a series, I enjoy playing cricket. I also love collecting little moments from everyday life, and this portfolio is where I get to share some of them.
 
 ## Around my desktop
 
@@ -18,4 +22,4 @@ Hello! I'm Mohammad Manazir, a first-year Zoology student at Aligarh Muslim Univ
 - [Instagram — @psy.manzar](https://www.instagram.com/psy.manzar/?hl=en)
 - [LinkedIn](https://www.linkedin.com/in/mohd-manazir-b42471434/)
 
-*More about me coming soon.*
+*Thanks for stopping by — feel free to explore!*

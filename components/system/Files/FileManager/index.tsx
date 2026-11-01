@@ -25,6 +25,7 @@ import { useFileSystemActions, useRootFs } from "contexts/fileSystem";
 import {
   useForegroundId,
   useSessionActions,
+  useSessionLoaded,
   useView,
   useWindowState,
 } from "contexts/session";
@@ -39,6 +40,7 @@ import {
 import { clsx, getExtension, haltEvent } from "utils/functions";
 import { isEditableElement } from "utils/keyboard";
 import { loadFileSystemFunctions } from "utils/loaders";
+import { compactDesktopIconPositions } from "utils/compactDesktopIconPositions";
 
 const StyledEmpty = dynamic(
   () => import("components/system/Files/FileManager/StyledEmpty")
@@ -79,7 +81,9 @@ const FileManager: FC<FileManagerProps> = ({
   skipSorting,
   url,
 }) => {
-  const { setForegroundId, setViews } = useSessionActions();
+  const { setForegroundId, setIconPositions, setViews } = useSessionActions();
+  const sessionLoaded = useSessionLoaded();
+  const desktopPositionsCompacted = useRef(false);
   const foregroundId = useForegroundId();
   const sessionView = useView(url);
   const view = isDesktop
@@ -254,6 +258,34 @@ const FileManager: FC<FileManagerProps> = ({
   // blur fires when its focused element was already removed by navigation
   const onDesktopFocusCapture = (): void => setForegroundId("");
   const fileKeys = Object.keys(files);
+
+  // The user's saved positions can retain empty cells after desktop shortcuts
+  // (such as Blogs) are removed. Compact once, after the complete directory
+  // and saved session have loaded, without interfering with later icon drags.
+  useEffect(() => {
+    if (
+      !isDesktop ||
+      !sessionLoaded ||
+      isLoading ||
+      desktopPositionsCompacted.current ||
+      fileKeys.length === 0
+    ) {
+      return;
+    }
+
+    const grid = fileManagerRef.current;
+    if (!grid) return;
+
+    desktopPositionsCompacted.current = true;
+    const rows = getComputedStyle(grid)
+      .gridTemplateRows.split(" ")
+      .filter(Boolean).length;
+
+    setIconPositions((positions) =>
+      compactDesktopIconPositions(url, fileKeys, positions, Math.max(1, rows))
+    );
+  }, [fileKeys, isDesktop, isLoading, sessionLoaded, setIconPositions, url]);
+
   const isEmptyFolder =
     !isDesktop && !isStartMenu && !loading && fileKeys.length === 0;
 
