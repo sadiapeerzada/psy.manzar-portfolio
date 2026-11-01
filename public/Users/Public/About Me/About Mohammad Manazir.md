@@ -10,7 +10,6 @@ Hello! I'm Mohammad Manazir, a first-year Zoology student at Aligarh Muslim Univ
 ## Around my desktop
 
 - **Life** — memories and photographs
-- **Blogs** — thoughts and stories
 - **Tennis** — notes and favorite moments from the sport
 - **Resume** — academic profile
 

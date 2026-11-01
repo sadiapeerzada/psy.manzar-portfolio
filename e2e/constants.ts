@@ -257,9 +257,8 @@ export const START_BUTTON_MENU_ITEMS = [
 export const START_MENU_APPS = [
   /^Browser$/,
   /^DevTools$/,
-  /^IRC$/,
   /^Marked$/,
-  /^Messenger$/,
+  /^Instagram$/,
   /^Monaco Editor$/,
   /^Paint$/,
   /^PDF$/,
@@ -280,7 +279,7 @@ export const START_MENU_FOLDERS = {
     /^Ruffle$/,
     /^Virtual x86$/,
   ],
-  Games: [/^ClassiCube$/, /^DX-Ball$/, /^Quake III Arena$/, /^Space Cadet$/],
+  Games: [/^Chess$/, /^Chrome Dino$/, /^ClassiCube$/, /^DOOM$/, /^DX-Ball$/, /^Quake III Arena$/, /^Space Cadet$/],
 };
 
 export const TEST_APP_CONTAINER_APP = "Marked";

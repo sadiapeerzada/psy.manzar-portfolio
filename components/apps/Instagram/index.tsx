@@ -21,7 +21,7 @@ const Instagram: FC<ComponentProcessProps> = () => (
       textAlign: "center",
     }}
   >
-    <div style={{ fontSize: 54 }} aria-hidden="true">📸</div>
+    <img src="/System/Icons/instagram.svg" width={58} height={58} alt="" />
     <h1 style={{ fontSize: 27, margin: 0 }}>Instagram</h1>
     <p style={{ fontSize: 19, margin: 0, fontWeight: 600 }}>@psy.manzar</p>
     <p style={{ color: "#d3c8d9", margin: 0 }}>

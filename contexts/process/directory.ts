@@ -154,7 +154,7 @@ const directory: Processes = {
       height: 500,
       width: 425,
     },
-    icon: "/System/Icons/messenger.webp",
+    icon: "/System/Icons/instagram.svg",
     singleton: true,
     title: "Instagram",
   },

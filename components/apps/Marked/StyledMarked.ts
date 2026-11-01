@@ -34,6 +34,11 @@ const StyledMarked = styled.div`
       display: flex;
     }
 
+    img {
+      height: auto;
+      max-width: 100%;
+    }
+
     h1,
     h2 {
       border-bottom: 1px solid #ccc;
