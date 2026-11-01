@@ -14,7 +14,7 @@ test("Paint can draw without WebGL and save a PNG on the desktop", async ({
 }) => {
   await page.addInitScript(() => {
     const original = HTMLCanvasElement.prototype.getContext;
-    HTMLCanvasElement.prototype.getContext = function (type, ...args) {
+    HTMLCanvasElement.prototype.getContext = function (this: HTMLCanvasElement, type, ...args) {
       if (type === "webgl" || type === "experimental-webgl") return null;
       return original.call(this, type, ...args);
     } as typeof HTMLCanvasElement.prototype.getContext;
