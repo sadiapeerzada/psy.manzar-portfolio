@@ -1097,6 +1097,7 @@ export const getMimeType = (url: string, ext?: string): string => {
 
 export const isDynamicIcon = (icon?: string): boolean =>
   typeof icon === "string" &&
+  getExtension(icon) !== ".svg" &&
   (icon.startsWith(ICON_PATH) ||
     (icon.startsWith(USER_ICON_PATH) && !icon.startsWith(ICON_CACHE)));
 
