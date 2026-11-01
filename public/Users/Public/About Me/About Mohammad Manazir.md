@@ -9,7 +9,7 @@ Hello, I'm Mohammad Manazir, a B.Sc. freshman at Aligarh Muslim University, stud
 
 ## More about me
 
-I love to write, lose myself in a good book, and watch anime. When I'm not reading or catching up on a series, I enjoy playing cricket. I also love collecting little moments from everyday life, and this portfolio is where I get to share some of them.
+I love to write, lose myself in a good book, and watch anime. When I'm not reading or catching up on a series, I enjoy playing tennis. I also love collecting little moments from everyday life, and this portfolio is where I get to share some of them.
 
 ## Around my desktop
 
